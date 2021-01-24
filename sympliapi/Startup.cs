@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using sympliapi.Data;
+using sympliapi.SearchEngineExecutors;
 using sympliapi.Services;
 
 namespace sympliapi
@@ -28,11 +29,31 @@ namespace sympliapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Policy",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+            });
 
             services.AddControllers();
 
+            services.AddDistributedRedisCache(options =>
+                {
+                options.Configuration = Configuration.GetConnectionString("RedisConnection");
+                options.InstanceName = "master";
+                }
+            );
+
+            services.AddScoped<ISearchEngineExecutor, GoogleSearchExecutor>();
+            services.AddScoped<ISearchEngineExecutor, BingSearchExecutor>();
+
             services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<IServiceContext, SearchServiceContext>();
+            services.AddScoped<ISearchServiceProvider, SearchServiceProvider>();
 
             services.AddSwaggerGen(c =>
             {
@@ -53,6 +74,8 @@ namespace sympliapi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

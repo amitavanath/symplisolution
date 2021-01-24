@@ -1,25 +1,29 @@
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using sympliapi.Entities;
 using sympliapi.Models;
 using sympliapi.Services;
 
 namespace sympliapi.Controllers
 {
+    [EnableCors("Policy")]
     [ApiController]
     [Route("api/search")]
     public class SearchController : ControllerBase
     {
-        private readonly ISearchService _searchRepository;
+        private readonly ISearchService _searchService;
 
-        public SearchController(ISearchService searchRepository)
+        public SearchController(ISearchService searchService)
         {
-            _searchRepository = searchRepository;
+            _searchService = searchService;
         }
 
         [HttpGet]
-        public IActionResult GetSearchResults(SearchQueryDto searchQueryDto)
+        public ActionResult<IEnumerable<SearchResult>> GetSearchResults([FromQuery]SearchQueryDto searchQueryDto)
         {
-            return Ok(_searchRepository.GetSearchResults(searchQueryDto));
+            var results = _searchService.GetSearchResults(searchQueryDto);
+            return Ok(results);
         }
     }
 }

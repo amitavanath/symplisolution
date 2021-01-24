@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using sympliapi.Data;
 using sympliapi.Entities;
 using sympliapi.Models;
@@ -8,15 +10,29 @@ namespace sympliapi.Services
 {
     public class SearchService : ISearchService
     {
-        private readonly IServiceContext _context;
+        private readonly ISearchServiceProvider _provider;
+        private readonly IDistributedCache _cache;
 
-        public SearchService(IServiceContext context) => _context = context
-            ?? throw new System.ArgumentNullException(nameof(context));
+        public SearchService(ISearchServiceProvider provider, IDistributedCache cache) 
+        {
+            _provider = provider;
+            _cache = cache;
+        }
 
         
         public IEnumerable<SearchResult> GetSearchResults(SearchQueryDto searchQueryDto)
         {
-            return _context.GetSearchResults();
+            
+            if(string.IsNullOrEmpty(searchQueryDto.SearchTerm) || string.IsNullOrEmpty(searchQueryDto.CompanyURI))
+            {
+                return new List<SearchResult>();
+            }
+            else
+            {
+                return _provider.GetSearchResults(searchQueryDto);
+            }
+            
+            
         }
     }
 }
