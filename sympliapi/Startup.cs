@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using sympliapi.Data;
+using sympliapi.Services;
 
 namespace sympliapi
 {
@@ -28,6 +30,10 @@ namespace sympliapi
         {
 
             services.AddControllers();
+
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IServiceContext, SearchServiceContext>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "sympliapi", Version = "v1" });
