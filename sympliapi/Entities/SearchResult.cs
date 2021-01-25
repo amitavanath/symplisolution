@@ -3,7 +3,7 @@ using System;
 
 namespace sympliapi.Entities
 {
-    [BindRequired]
+    //[BindRequired]
     public class SearchResult
     {
         public Guid Id { get; set; }

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -48,6 +51,9 @@ namespace sympliapi
                 options.InstanceName = "master";
                 }
             );
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.AddScoped<ISearchEngineExecutor, GoogleSearchExecutor>();
             services.AddScoped<ISearchEngineExecutor, BingSearchExecutor>();

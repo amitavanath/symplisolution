@@ -9,6 +9,8 @@ namespace sympliapi.SearchEngineExecutors
 {
     public interface ISearchEngineExecutor
     {
-        public SearchResult ExecuteSearch(SearchQueryDto searchQueryDto);
+        public Task<SearchResult> ExecuteSearchAsync(SearchQueryDto searchQueryDto);
+
+        public Task<SearchResult> GetCachedObjectAsync(SearchQueryDto searchQueryDto);
     }
 }

@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using sympliapi.Entities;
 using sympliapi.Models;
+using sympliapi.Queries;
 using sympliapi.Services;
 
 namespace sympliapi.Controllers
@@ -12,18 +15,23 @@ namespace sympliapi.Controllers
     [Route("api/search")]
     public class SearchController : ControllerBase
     {
-        private readonly ISearchService _searchService;
 
-        public SearchController(ISearchService searchService)
+        private readonly IMediator _mediator;
+
+        public SearchController(IMediator mediator)
         {
-            _searchService = searchService;
+            _mediator = mediator;
         }
 
+        
+
         [HttpGet]
-        public ActionResult<IEnumerable<SearchResult>> GetSearchResults([FromQuery]SearchQueryDto searchQueryDto)
+        public async Task<ActionResult<IEnumerable<SearchResult>>> GetSearchResults([FromQuery]SearchQueryDto searchQueryDto)
         {
-            var results = _searchService.GetSearchResults(searchQueryDto);
-            return Ok(results);
+            var query = new GetSearchResultsQuery(searchQueryDto);
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
         }
     }
 }

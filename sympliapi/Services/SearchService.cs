@@ -20,7 +20,7 @@ namespace sympliapi.Services
         }
 
         
-        public IEnumerable<SearchResult> GetSearchResults(SearchQueryDto searchQueryDto)
+        public async Task<IEnumerable<SearchResult>> GetSearchResultsAsync(SearchQueryDto searchQueryDto)
         {
             
             if(string.IsNullOrEmpty(searchQueryDto.SearchTerm) || string.IsNullOrEmpty(searchQueryDto.CompanyURI))
@@ -29,7 +29,7 @@ namespace sympliapi.Services
             }
             else
             {
-                return _provider.GetSearchResults(searchQueryDto);
+                return await _provider.GetSearchResultsAsync(searchQueryDto);
             }
             
             

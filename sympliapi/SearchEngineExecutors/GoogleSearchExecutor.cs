@@ -19,9 +19,9 @@ namespace sympliapi.SearchEngineExecutors
             _cache = cache;
         }
 
-        public SearchResult ExecuteSearch(SearchQueryDto searchQueryDto)
+        public async Task<SearchResult> ExecuteSearchAsync(SearchQueryDto searchQueryDto)
         {
-            var cache = GetCachedObject(searchQueryDto);
+            var cache = await GetCachedObjectAsync(searchQueryDto);
             if ((cache is null))
             {
                 var result = new SearchResult
@@ -43,9 +43,9 @@ namespace sympliapi.SearchEngineExecutors
 
         }
 
-        public SearchResult GetCachedObject(SearchQueryDto searchQueryDto)
+        public async Task<SearchResult> GetCachedObjectAsync(SearchQueryDto searchQueryDto)
         {
-            var cachedresult = _cache.GetString(searchQueryDto.CompanyURI+searchQueryDto.SearchTerm+"google");
+            var cachedresult = await _cache.GetStringAsync(searchQueryDto.CompanyURI+searchQueryDto.SearchTerm+"google");
 
             if (String.IsNullOrEmpty(cachedresult))
             {
