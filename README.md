@@ -33,12 +33,12 @@
 
 sympli search automation API which supports the following endpoints:
 
-1. Search with key terms and company uri
+1. Search with key terms and company uri.
 
 ### Built With
 
 Built using .Net 5 WebAPI, C# and the WebAPI is deployed to Azure WebAPP.
 
-WebApp url: https://todochallengeapi.azurewebsites.net/api/todolist
+WebApp url: http://symplisearchapi.azurewebsites.net/api/search
 
 Run the application locally using "dotnet run" command.
