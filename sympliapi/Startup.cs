@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using sympliapi.Data;
+using sympliapi.Entities;
 using sympliapi.SearchEngineExecutors;
 using sympliapi.Services;
 
@@ -57,6 +58,8 @@ namespace sympliapi
 
             services.AddScoped<ISearchEngineExecutor, GoogleSearchExecutor>();
             services.AddScoped<ISearchEngineExecutor, BingSearchExecutor>();
+
+            services.AddScoped<ISearchResultCacheProvider<SearchResult>, SearchResultCacheProvider<SearchResult>>();
 
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ISearchServiceProvider, SearchServiceProvider>();

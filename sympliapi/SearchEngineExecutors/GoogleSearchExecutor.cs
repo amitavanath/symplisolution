@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using sympliapi.Data;
 using sympliapi.Entities;
 using sympliapi.Models;
 using System;
@@ -14,48 +15,36 @@ namespace sympliapi.SearchEngineExecutors
     {
         private readonly IDistributedCache _cache;
 
-        public GoogleSearchExecutor(IDistributedCache cache)
+        private readonly ISearchResultCacheProvider<SearchResult> _searchResultCacheProvider;
+
+        public GoogleSearchExecutor(IDistributedCache cache, ISearchResultCacheProvider<SearchResult> searchResultCacheProvider)
         {
             _cache = cache;
+            _searchResultCacheProvider = searchResultCacheProvider;
         }
 
         public async Task<SearchResult> ExecuteSearchAsync(SearchQueryDto searchQueryDto)
         {
-            var cache = await GetCachedObjectAsync(searchQueryDto);
-            if ((cache is null))
-            {
-                var result = new SearchResult
-                {
-                    Id = Guid.NewGuid(),
-                    SearchEngineName = "google",
-                    SearchTerm = searchQueryDto.SearchTerm,
-                    PositionResult = BuildARandomPositionResult()
-                };
+            var cacheKey = searchQueryDto.CompanyURI + searchQueryDto.SearchTerm + SearchEngineNames.Google;
+            var searchResult = await _searchResultCacheProvider.GetOrCreate(cacheKey, () => GetSearchData(searchQueryDto));
 
-                _cache.SetString(searchQueryDto.CompanyURI + searchQueryDto.SearchTerm + "google", JsonConvert.SerializeObject(result));
-
-                return result;
-            }
-            else
-            {
-                return cache;
-            }
-
+            return searchResult;
         }
 
-        public async Task<SearchResult> GetCachedObjectAsync(SearchQueryDto searchQueryDto)
+        private SearchResult GetSearchData(SearchQueryDto searchQueryDto)
         {
-            var cachedresult = await _cache.GetStringAsync(searchQueryDto.CompanyURI+searchQueryDto.SearchTerm+"google");
+            var result = new SearchResult
+            {
+                Id = Guid.NewGuid(),
+                SearchEngineName = SearchEngineNames.Google,
+                SearchTerm = searchQueryDto.SearchTerm,
+                PositionResult = BuildARandomPositionResult()
+            };
 
-            if (String.IsNullOrEmpty(cachedresult))
-            {
-                return null;
-            }
-            else
-            {
-                return JsonConvert.DeserializeObject<SearchResult>(cachedresult);
-            }
+            return result;
         }
+
+        
 
         public string BuildARandomPositionResult()
         {
