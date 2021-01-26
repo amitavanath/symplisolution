@@ -41,9 +41,15 @@ namespace sympliapi.Data
                 
                 // Save data in cache.
                 _cache.SetString(key, JsonConvert.SerializeObject(cacheEntry), cacheEntryOptions);
+
+                return cacheEntry;
+            }
+            else
+            {
+                return JsonConvert.DeserializeObject<T>(cachedResult);
             }
 
-            return JsonConvert.DeserializeObject<T>(cachedResult);
+            
         }
 
     }

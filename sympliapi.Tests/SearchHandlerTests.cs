@@ -50,7 +50,7 @@ namespace sympliapi.Tests
             var result = await handler.Handle(query, new System.Threading.CancellationToken());
 
             //Assert
-            Assert.Single(result);
+            Assert.NotEmpty(result);
         }
 
         [Fact]

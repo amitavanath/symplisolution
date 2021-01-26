@@ -21,7 +21,7 @@ namespace sympliapi.Tests
         public async void GetGoogleSearchResults_ReturnsValue()
         {
             //Arrange
-            SearchQueryDto searchQuery = new SearchQueryDto { CompanyURI = "www.sympli.com", SearchTerm = "e-settlements" };
+            SearchQueryDto searchQuery = new SearchQueryDto();
 
             var items = await GetGoogleSearchResultFromFileAsync();
 
@@ -41,10 +41,32 @@ namespace sympliapi.Tests
 
 
         [Fact]
+        public async void GetGoogleSearchResults_ReturnsNullValue()
+        {
+            //Arrange
+            SearchQueryDto searchQuery = new SearchQueryDto();
+
+            var items = await GetGoogleSearchResultFromFileAsync();
+
+            var distributedCacheMock = new Mock<IDistributedCache>();
+            var cacheProviderMock = new Mock<ISearchResultCacheProvider<SearchResult>>();
+
+            var googleSearchExecutor = new GoogleSearchExecutor(distributedCacheMock.Object, cacheProviderMock.Object);
+
+            //Act
+            var result = await googleSearchExecutor.ExecuteSearchAsync(searchQuery);
+
+            //Assert
+            Assert.Null(result);
+
+        }
+
+
+        [Fact]
         public async void GetBingSearchResults_ReturnsValue()
         {
             //Arrange
-            SearchQueryDto searchQuery = new SearchQueryDto { CompanyURI = "www.sympli.com", SearchTerm = "e-settlements" };
+            SearchQueryDto searchQuery = new SearchQueryDto();
 
             var items = await GetGoogleSearchResultFromFileAsync();
 
@@ -59,6 +81,28 @@ namespace sympliapi.Tests
 
             //Assert
             Assert.NotNull(result);
+
+        }
+
+
+        [Fact]
+        public async void GetBingSearchResults_ReturnsNullValue()
+        {
+            //Arrange
+            SearchQueryDto searchQuery = new SearchQueryDto();
+
+            var items = await GetGoogleSearchResultFromFileAsync();
+
+            var distributedCacheMock = new Mock<IDistributedCache>();
+            var cacheProviderMock = new Mock<ISearchResultCacheProvider<SearchResult>>();
+
+            var bingSearchExecutor = new BingSearchExecutor(distributedCacheMock.Object, cacheProviderMock.Object);
+
+            //Act
+            var result = await bingSearchExecutor.ExecuteSearchAsync(searchQuery);
+
+            //Assert
+            Assert.Null(result);
 
         }
 

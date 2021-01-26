@@ -26,7 +26,7 @@ namespace sympliapi.Controllers
         
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SearchResult>>> GetSearchResults([FromQuery]SearchQueryDto searchQueryDto)
+        public async Task<ActionResult<IEnumerable<SearchResultDto>>> GetSearchResults([FromQuery]SearchQueryDto searchQueryDto)
         {
             var query = new GetSearchResultsQuery(searchQueryDto);
             var result = await _mediator.Send(query);
