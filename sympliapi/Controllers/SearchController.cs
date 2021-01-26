@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using sympliapi.Entities;
 using sympliapi.Models;
 using sympliapi.Queries;
-using sympliapi.Services;
 
 namespace sympliapi.Controllers
 {
